@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Material — CFD, Heat Transfer &amp; Coupling for THADES</title>
+<style>
+  :root{
+    --ink:#1b1c20;--ink-soft:#3a3d45;--muted:#696d76;--line:#dcdee3;
+    --accent:#123f4a;--accent-2:#1f5f70;--accent-soft:#e9f0f1;--paper:#ffffff;
+    --key:#eef4ee;--key-line:#a8ccb0;--key-ink:#245a34;
+    --book:#f4efe6;--book-line:#d8c6a4;--book-ink:#7d5f24;
+    --paper-c:#e7eef5;--paper-line:#a7c3de;--paper-ink:#255184;
+    --verify:#f5e9f3;--verify-line:#cb9fc5;--verify-ink:#743d6d;
+    --thades:#eaf3f1;--thades-line:#9cc7bd;--thades-ink:#1d5a4d;
+    --formula:#f4f6f6;
+    --maxw:900px;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{margin:0;background:#f2f3f1;color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;font-size:16px;line-height:1.64;}
+  .sheet{max-width:var(--maxw);margin:32px auto;background:var(--paper);
+    padding:64px 72px 72px;box-shadow:0 1px 3px rgba(0,0,0,.08),0 8px 28px rgba(0,0,0,.06);}
+
+  .doc-head{border-bottom:3px solid var(--accent);padding-bottom:22px;margin-bottom:8px;}
+  .eyebrow{font-family:"Helvetica Neue",Arial,sans-serif;font-size:11.5px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--accent);font-weight:600;margin:0 0 14px;}
+  h1.title{font-size:26px;line-height:1.28;font-weight:600;margin:0 0 14px;letter-spacing:-.01em;}
+  .byline{font-family:"Helvetica Neue",Arial,sans-serif;font-size:13px;color:var(--muted);line-height:1.6;}
+  .byline b{color:var(--ink-soft);font-weight:600;}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 15px;margin:18px 0 4px;font-family:"Helvetica Neue",Arial,sans-serif;font-size:11px;color:var(--muted);}
+  .legend span{display:flex;align-items:center;gap:6px;} .legend i{width:12px;height:12px;border-radius:3px;display:inline-block;}
+
+  h2{font-family:"Helvetica Neue",Arial,sans-serif;font-size:13.5px;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--accent);font-weight:700;margin:48px 0 4px;display:flex;align-items:baseline;gap:12px;
+    border-top:2px solid var(--accent);padding-top:16px;}
+  h2 .num{font-size:22px;font-weight:700;color:var(--accent-2);font-family:Georgia,serif;}
+  .goal{font-family:"Helvetica Neue",Arial,sans-serif;font-size:12.5px;color:var(--muted);font-style:italic;margin:0 0 10px;}
+  h3{font-family:"Helvetica Neue",Arial,sans-serif;font-size:15px;font-weight:700;color:var(--ink);margin:22px 0 6px;}
+  p{margin:0 0 13px;} strong{font-weight:600;} em{font-style:italic;}
+
+  .eq{font-family:"Helvetica Neue",Arial,sans-serif;font-size:14.5px;background:var(--formula);border:1px solid var(--line);
+    border-left:3px solid var(--accent-2);border-radius:0 5px 5px 0;padding:12px 16px;margin:10px 0;color:var(--ink-soft);text-align:center;}
+  .eq b{color:var(--accent);font-size:16px;}
+  .eq .lbl{display:block;text-align:left;color:var(--muted);font-size:11.5px;margin-top:6px;}
+
+  .book{background:var(--book);border:1px solid var(--book-line);border-radius:6px;padding:11px 15px;margin:11px 0;
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:12.5px;line-height:1.5;color:#6a521e;}
+  .book .h{font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:3px;color:var(--book-ink);}
+  .paper{background:var(--paper-c);border:1px solid var(--paper-line);border-radius:6px;padding:11px 15px;margin:11px 0;
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:12.5px;line-height:1.5;color:#213f5c;}
+  .paper .h{font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:3px;color:var(--paper-ink);}
+  .verify{background:var(--verify);border:1px solid var(--verify-line);border-radius:6px;padding:11px 15px;margin:11px 0;
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:12px;line-height:1.5;color:var(--verify-ink);}
+  .verify .h{font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:3px;}
+  .thades{background:var(--thades);border:1px solid var(--thades-line);border-radius:6px;padding:11px 15px;margin:11px 0;
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:12.5px;line-height:1.5;color:var(--thades-ink);}
+  .thades .h{font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:3px;}
+
+  table{width:100%;border-collapse:collapse;font-family:"Helvetica Neue",Arial,sans-serif;font-size:12.5px;margin:13px 0;}
+  th{background:var(--accent);color:#fff;text-align:left;padding:8px 11px;font-weight:600;}
+  td{border-bottom:1px solid var(--line);padding:8px 11px;vertical-align:top;color:var(--ink-soft);}
+  td:first-child{color:var(--ink);font-weight:600;}
+  tr:nth-child(even) td{background:#fafbfb;}
+
+  ol.refs{font-family:"Helvetica Neue",Arial,sans-serif;font-size:12.5px;color:var(--ink-soft);line-height:1.5;padding-left:24px;}
+  ol.refs li{margin-bottom:7px;}
+  .refhead{font-family:"Helvetica Neue",Arial,sans-serif;font-size:12px;font-weight:700;color:var(--accent);
+    text-transform:uppercase;letter-spacing:.06em;margin:16px 0 6px;}
+
+  @media print{
+    body{background:#fff;font-size:10.5pt;}
+    .sheet{box-shadow:none;margin:0;max-width:none;padding:0;}
+    .eq,.book,.paper,.verify,.thades,table{page-break-inside:avoid;}
+    .book,.paper,.verify,.thades,th{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    h2,h3{page-break-after:avoid;}
+  }
+  @media(max-width:680px){.sheet{padding:36px 22px 48px;}h1.title{font-size:21px;}}
+</style>
+</head>
+<body>
+<main class="sheet">
+
+  <div class="doc-head">
+    <p class="eyebrow">Study Material · Doctoral Preparation</p>
+    <h1 class="title">CFD, Heat Transfer &amp; Coupling — Study Material for the THADES Doctorate</h1>
+    <p class="byline">
+      <b>Prepared by:</b> Dimas Maulana Fasya · M.Sc. Architecture, Pusan National University<br>
+      <b>What this is:</b> Teaching material organised by the seven learning modules. Each module explains the concept itself, states the key equations (with a note where a value should be checked against the source), points to the exact book that develops it, and shows which of the supporting studies applies it and how it connects to THADES.
+    </p>
+    <div class="legend">
+      <span><i style="background:#d8c6a4"></i> Book source</span>
+      <span><i style="background:#a7c3de"></i> Applied in paper</span>
+      <span><i style="background:#9cc7bd"></i> Link to THADES</span>
+      <span><i style="background:#cb9fc5"></i> Check equation from source</span>
+    </div>
+  </div>
+
+  <!-- MODULE 1 -->
+  <h2><span class="num">1</span> Fluid Mechanics Foundations</h2>
+  <p class="goal">Governing equations — what CFD actually solves.</p>
+
+  <p>Every airflow in the THADES system — the buoyant rise in the DSF cavity, the suction of the TST fan, the supply jet from the DOAS — obeys the same three conservation laws. CFD is, at bottom, a machine that solves these three simultaneously in every cell of a mesh.</p>
+
+  <h3>The continuum assumption (why the equations can be written at all)</h3>
+  <p>Before any conservation law can be written, one assumption must hold: that air can be treated as a <em>continuum</em> — a substance whose properties vary smoothly in space, rather than as discrete molecules. White grounds this precisely. Density is defined not as a fixed value but as a limit:</p>
+  <div class="eq"><b>ρ = lim<sub>δV → δV*</sub> (δm / δV)</b><span class="lbl">White, <em>Fluid Mechanics</em> (7th ed.), Eq. (1.1) — density as a limiting ratio of molecular mass δm to a small volume δV, taken down to a limiting volume δV* (≈ 10⁻⁹ mm³ for air at standard conditions, containing ~3×10⁷ molecules).</span></div>
+  <p>Below δV* the value fluctuates with individual molecules; above it, bulk variation appears; at δV* the density is well-defined and smooth. <strong>Why this matters for the research:</strong> the continuum assumption is what permits differential calculus — and therefore the governing equations and CFD itself — to be applied to the air in the DSF cavity, TST, and occupied zone. White notes it fails only at very low pressures where molecular spacing approaches the system size, which never occurs in a building. This is the licence on which the whole method rests, which is why it is stated first rather than assumed silently.</p>
+
+  <h3>Conservation of mass (continuity)</h3>
+  <p>Air entering a region must equal air leaving plus any accumulation. For the near-incompressible airflow in a building, this reduces to the statement that the velocity field has zero divergence — the flow neither compresses nor creates mass. This is what forces the DOAS supply and the fan exhaust to balance: air cannot be pushed in without an equal path out.</p>
+  <div class="eq"><b>div <em>u</em> = 0</b><span class="lbl">Versteeg &amp; Malalasekera, Eq. (2.5) — continuity for an incompressible fluid (ρ constant), reduced from the general mass-conservation Eq. (2.4). In vector-operator notation this is written ∇·<em>u</em> = 0; the two are identical.</span></div>
+  <p>The equation states that the divergence of the velocity field is zero: at every point, the mass of air flowing in equals the mass flowing out, with no local compression. <strong>Why this form is used in the research:</strong> building airflow moves far below the speed of sound, so density change is negligible and the incompressible form (2.5) is the correct simplification of the general continuity equation. It is not included as background — it is an active constraint the CFD solver enforces in every cell, and it is what couples the DOAS supply rate to the TST exhaust rate: a given mechanical supply cannot be resolved without an equal, physically consistent outflow path, which is precisely the balance the THADES active system must respect.</p>
+
+  <h3>Conservation of momentum (Navier–Stokes)</h3>
+  <p>This is Newton's second law applied to a fluid parcel: its acceleration equals the sum of forces — pressure gradients, viscous friction, and body forces such as gravity/buoyancy. The <strong>buoyancy term is the one that matters most here</strong>: when air warms, its density drops, and gravity acting on that density difference becomes an upward force. That single term is the physical origin of the stack effect in the TST and the recirculation that produces the aerodynamic short-circuit.</p>
+  <div class="eq"><b>ρ (D<em>u</em>/Dt) = −∂p/∂x + div(μ grad <em>u</em>) + S<sub>Mx</sub></b><span class="lbl">Versteeg &amp; Malalasekera, Eq. (2.34a) — x-component of the Navier–Stokes momentum equation for a Newtonian fluid; the y- and z-components have the same form. D<em>u</em>/Dt is the <em>substantive derivative</em> — the book's term (Eq. 2.7: Dφ/Dt = ∂φ/∂t + <em>u</em>·grad φ), also called the material or total derivative in other texts. S<sub>M</sub> is the momentum source term.</span></div>
+  <p>The left side is the rate of change of momentum following a fluid particle; the right side sums the forces acting on it — the pressure gradient, the viscous stress div(μ grad <em>u</em>), and any body force collected in S<sub>M</sub>. <strong>Why this equation is central to the research:</strong> it is the equation the CFD solver integrates to produce the velocity field, and two features of Versteeg's formulation matter directly for THADES. First, momentum is written per component using the substantive derivative, not as a compact vector expression — this is the form actually solved. Second, gravity and buoyancy are <em>not</em> written into the main equation; they enter through the source term S<sub>M</sub> (implemented via the Boussinesq treatment, Module 5). This is not a notational detail: the buoyancy source is the physical origin of the stack effect in the TST and of the recirculation that produces the aerodynamic short-circuit — the phenomenon the doctoral research sets out to resolve. The momentum equation is therefore the point at which the mechanism of RQ1 is expressed mathematically.</p>
+
+  <h3>Conservation of energy</h3>
+  <p>Thermal energy is transported by the flow (advection) and by conduction, with sources such as solar gain. For the incompressible air of a building (where internal energy i = cT and div <em>u</em> = 0), Versteeg recasts the general energy equation into a <em>temperature equation</em>:</p>
+  <div class="eq"><b>ρc (DT/Dt) = div(k grad T) + S<sub>i</sub></b><span class="lbl">Versteeg &amp; Malalasekera, Eq. (2.25), reduced form — temperature form of the energy equation for an incompressible fluid, with the viscous-dissipation term omitted. ρc(DT/Dt) is the rate of change of thermal energy following the flow; div(k grad T) is conduction; S<sub>i</sub> is the energy source (e.g. solar gain). Viscous dissipation is neglected because building airflow is low-velocity, so frictional heating is negligible — a standard assumption for indoor CFD (confirm the precedent in the referenced studies, e.g. Yang; Chen &amp; Gorlé).</span></div>
+  <p>The left-hand side, DT/Dt, carries temperature <em>with</em> the moving air (the same substantive derivative as in the momentum equation), which is precisely why this equation couples temperature to velocity. <strong>Why this equation completes the mechanism:</strong> a buoyancy problem cannot be solved as flow-only. Temperature drives density, density drives the buoyancy source in the momentum equation (S<sub>M</sub>), buoyancy drives the flow, and the flow then redistributes temperature through this very equation. The three conservation laws are therefore a closed loop — and the energy equation (2.25) is the link that closes it. For THADES this is not academic: the entire question of whether the DSF cavity's warm air short-circuits to the TST, or is instead flushed through the occupied zone by the DOAS, is a question about how temperature and velocity co-evolve, which only the coupled energy equation can answer.</p>
+
+  <div class="book">
+    <span class="h">Book source (energy)</span>
+    Versteeg &amp; Malalasekera, §2.1.4 — energy equation in three dimensions: the general form Eq. (2.22), the internal-energy form Eq. (2.24), and the incompressible temperature form Eq. (2.25) used here.
+  </div>
+
+  <div class="book">
+    <span class="h">Book source</span>
+    White, <em>Fluid Mechanics</em> (7th ed.), §1.5 "The Fluid as a Continuum" (Eq. 1.1) — the continuum assumption and the limit definition of density that licenses the whole approach. Versteeg &amp; Malalasekera, <em>Intro to CFD</em> (2nd ed.), §2.1–2.3 — the continuity (Eq. 2.5), substantive derivative (Eq. 2.7), and Navier–Stokes (Eq. 2.34a) forms used above.
+  </div>
+  <div class="thades">
+    <span class="h">Link to THADES</span>
+    The short-circuit identified in the master's research lives in the buoyancy term of the momentum equation coupled to the energy equation. Understanding these two together <em>is</em> understanding the mechanism at first principles — the basis of RQ1.
+  </div>
+  <div class="paper">
+    <span class="h">Applied in — concretely</span>
+    Chen &amp; Gorlé (2022) solve these same governing equations in transient RANS form for buoyancy-driven flow across a three-storey atrium, carrying the buoyancy source exactly as the S<sub>M</sub> term here, and compare the resulting temperature field to full-scale sensor measurements (volume-averaged floor temperatures within ≈0.3 °C). It is a direct demonstration that this equation set, with a buoyancy source, reproduces measured multi-storey buoyant flow — the closest published evidence that the RQ1 mechanism can be captured at the equation level.
+  </div>
+
+  <!-- MODULE 2 -->
+  <h2><span class="num">2</span> Dimensionless Numbers</h2>
+  <p class="goal">The physical language of flow and heat regimes.</p>
+
+  <p>Rather than track absolute velocities and temperatures, engineers compress the physics into ratios. Each ratio answers one question: which force wins? These numbers are the vocabulary every CFD and heat-transfer paper uses, and they decide which heat-transfer correlation applies in Module 3.</p>
+
+  <table>
+    <thead><tr><th>Number</th><th>Ratio of…</th><th>What it decides</th><th>For the THADES system</th></tr></thead>
+    <tbody>
+      <tr><td>Reynolds (Re)</td><td>inertia / viscous</td><td>laminar vs turbulent</td><td>whether cavity/fan flow is turbulent</td></tr>
+      <tr><td>Grashof (Gr)</td><td>buoyancy / viscous</td><td>strength of natural convection</td><td>buoyant drive in DSF/TST</td></tr>
+      <tr><td>Prandtl (Pr)</td><td>momentum / thermal diffusivity</td><td>fluid property (air ≈ 0.71)</td><td>fixed for air</td></tr>
+      <tr><td>Rayleigh (Ra = Gr·Pr)</td><td>—</td><td>onset/strength of buoyant convection</td><td>cavity convection regime</td></tr>
+      <tr><td>Richardson (Ri)</td><td>buoyancy / inertia</td><td>natural vs mixed vs forced</td><td>passive vs fan-assisted regime</td></tr>
+      <tr><td>Nusselt (Nu)</td><td>convective / conductive heat</td><td>convection effectiveness → CHTC</td><td>gives the surface heat exchange</td></tr>
+    </tbody>
+  </table>
+
+  <p>The <strong>Richardson number is the switch</strong> that decides which physics dominates: buoyancy-driven (natural), mechanically-driven (forced), or both (mixed). This is precisely the passive/active question at the heart of THADES — when the TST fan runs, Ri drops and the regime moves toward forced; when it is off, buoyancy dominates and Ri is high.</p>
+  <div class="eq"><b>Ri = Gr / Re²</b> &nbsp;·&nbsp; natural: Ri &gt; 10 &nbsp;|&nbsp; mixed: 0.1 ≤ Ri ≤ 10 &nbsp;|&nbsp; forced: Ri &lt; 0.1<span class="lbl">Standard dimensionless-number identity (buoyancy-to-inertia ratio), from heat-transfer textbooks (e.g. Incropera &amp; DeWitt). This ratio is not drawn from a single uploaded page; the regime thresholds follow the Yang usage — confirm the exact cut-offs in the source adopted.</span></div>
+  <p>The Richardson number compares the buoyancy force (Grashof) to the inertial force (Reynolds squared). A large value means buoyancy dominates; a small value means the mechanical drive dominates. <strong>Why this ratio is decisive for the research:</strong> it is the quantity that selects which heat-transfer correlation applies in Module 3, and it maps directly onto the THADES operating modes. When the TST fan is off, buoyancy governs and Ri is high (natural convection); when the fan and DOAS drive the flow, Ri falls (forced convection); and in the hybrid operation the system targets, both act together (mixed). The passive–active question at the core of the research is, in dimensionless terms, a question about where Ri sits — which is why this ratio, though standard, is used rather than assumed away.</p>
+  <div class="verify">
+    <span class="h">Check from source</span>
+    Ri = Gr/Re² is a standard textbook identity (Incropera) — cite it from the book, not from a paper. The regime thresholds (10, 0.1) follow the Yang usage; confirm the exact cut-offs in the source adopted, as some texts differ slightly.
+  </div>
+  <div class="book">
+    <span class="h">Book source</span>
+    Incropera &amp; DeWitt, <em>Fundamentals of Heat and Mass Transfer</em> — definitions and derivations of Re, Gr, Pr, Ra, Nu from the governing equations. Saltelli's "pitfalls" chapter is unrelated here; this is pure heat-transfer grounding.
+  </div>
+
+  <!-- MODULE 3 -->
+  <h2><span class="num">3</span> Heat Transfer &amp; the CHTC</h2>
+  <p class="goal">Conduction, convection, and the coefficient that links flow to energy.</p>
+
+  <p>Three modes move heat: <strong>conduction</strong> (through the solid walls and glazing), <strong>convection</strong> (carried by the moving air — the mode CFD resolves), and <strong>radiation</strong> (solar and surface-to-surface). The quantity that ties the CFD flow field to an energy result is the <strong>convective heat transfer coefficient (CHTC, α)</strong>: it says how much heat a surface exchanges per degree of temperature difference, given the air moving past it.</p>
+
+  <p>CHTC is obtained from the Nusselt number, and — this is the key logic — <strong>which Nusselt correlation applies depends on the flow regime from Module 2</strong>. The chain is: CFD gives near-wall velocity → compute Re and Gr → form Ri → pick the regime → apply that regime's Nusselt correlation → get α.</p>
+
+  <div class="eq"><b>α = Nu · λ / l</b><span class="lbl">Yang et al. (Paper 2), Eq. (2) — CHTC from Nusselt number Nu, air conductivity λ, representative length l.</span></div>
+  <p>This equation converts a dimensionless Nusselt number into a physical heat transfer coefficient α, in W/m²K. <strong>Why it is the pivot of the whole method:</strong> α is the single quantity that turns a CFD airflow result into an energy result. Without it, a velocity field is just air movement; with it, that movement becomes a surface heat exchange that the building-energy model can add to its load balance. Every energy figure the doctoral research reports for THADES passes through this conversion, which is why the correct Nusselt correlation — selected by regime below — matters so much.</p>
+  <p><strong>Natural convection</strong> (buoyancy dominant, Ri &gt; 10):</p>
+  <div class="eq"><b>Nu<sub>N</sub> = 0.0241 (Gr·Pr)<sup>0.4</sup></b><span class="lbl">Yang et al. (Paper 2), Eq. (3) — natural convection, vertical plane. Applies when the fan is off and the cavity/tower runs on buoyancy alone. Coefficient and exponent should be confirmed against the source, as they vary with surface geometry.</span></div>
+  <p><strong>Forced convection</strong> (mechanical drive dominant, Ri &lt; 0.1):</p>
+  <div class="eq"><b>Nu<sub>F</sub> = 0.037 Re<sup>0.8</sup> Pr<sup>1/3</sup></b><span class="lbl">Yang et al. (Paper 2), forced-convection regime (Ri &lt; 0.1). This is the standard turbulent flat-plate average Nusselt correlation (valid 0.6 ≤ Pr ≤ 60), independently confirmed in Incropera &amp; DeWitt — it is <em>not</em> the Dittus–Boelter pipe correlation (0.023).</span></div>
+  <p><strong>Mixed convection</strong> (both, 0.1 ≤ Ri ≤ 10) — the two are blended:</p>
+  <div class="eq"><b>Nu<sub>M</sub> = (Nu<sub>N</sub><sup>n</sup> + Nu<sub>F</sub><sup>n</sup>)<sup>1/n</sup></b>, n = 2<span class="lbl">Yang et al. (Paper 2), Eq. (12) — mixed convection, combining natural and forced. This is the regime the THADES hybrid most often occupies, with passive buoyancy and active supply/exhaust acting together.</span></div>
+  <p><strong>Why these three correlations, and not one:</strong> a single correlation would misrepresent THADES, because the system deliberately operates across regimes — buoyancy-only when passive, fan-driven when active, and both together in normal hybrid operation. The mixed-convection blend (Eq. 12) is therefore the expression that most often applies, and it is the one that lets the research quantify how the active supplementation changes the surface heat exchange relative to the passive baseline — the core comparison of RQ3.</p>
+
+  <div class="verify">
+    <span class="h">Check equations from source</span>
+    The coefficients (0.0241, 0.037) and exponents (0.4, 0.8, 1/3) should be reconfirmed against Yang (Paper 2) and against Incropera's correlation tables before use. The 0.037 form is the turbulent flat-plate correlation, <em>not</em> the Dittus–Boelter pipe form (0.023). The natural-convection coefficient and exponent can vary by geometry — confirm the vertical-plane values in Incropera.
+  </div>
+  <div class="book">
+    <span class="h">Book source</span>
+    Incropera &amp; DeWitt — external-flow / flat-plate correlations (the 0.037 turbulent form and its validity range) and natural-convection correlations (the 0.0241-type form). This is where these correlations are derived and their limits stated.
+  </div>
+  <div class="paper">
+    <span class="h">Applied in</span>
+    Yang 2026 uses exactly this regime-selection-by-Richardson scheme to compute CHTC inside BES from a CFD velocity. Yang 2024 adds the moisture/latent counterpart — relevant to the sensible–latent split central to THADES.
+  </div>
+  <div class="thades">
+    <span class="h">Link to THADES</span>
+    RQ3 (energy effectiveness) is computed through α: it converts the flow the DOAS and fan create into a cooling-energy number. The mixed-convection blend is the physics of the hybrid passive–active operation.
+  </div>
+
+  <!-- MODULE 4 -->
+  <h2><span class="num">4</span> Turbulence Modelling</h2>
+  <p class="goal">RANS, LES, and why turbulence needs a model at all.</p>
+
+  <p>Turbulent flow contains eddies spanning a vast range of sizes. Resolving all of them directly (DNS) is impossible for a building-scale domain — the computational cost is astronomical. So turbulence is <strong>modelled</strong>, not fully resolved. But there is a deeper, more precise reason a model is unavoidable, which Pope sets out as the <em>closure problem</em>.</p>
+  <p><strong>The closure problem (why a model is mathematically necessary, not just convenient).</strong> When the Navier–Stokes equations are time-averaged to give the Reynolds equations, the averaging introduces new unknowns — the Reynolds stresses (−ρ⟨u′<sub>i</sub>u′<sub>j</sub>⟩). Pope's argument is exact: for a three-dimensional mean flow there are four governing equations (three Reynolds-equation components plus continuity), but they now contain <em>more than four unknowns</em>, because the Reynolds stresses are additional. A system with more unknowns than equations is <strong>unclosed</strong> — it cannot be solved without supplying extra information. This is not a computational limitation; it is a mathematical one. A turbulence model is precisely the "extra information" that closes the system.</p>
+  <p><strong>RANS (Reynolds-Averaged Navier–Stokes)</strong> solves for the time-averaged flow and closes the system through the <em>Boussinesq eddy-viscosity hypothesis</em>: it treats turbulent mixing as if it were an extra, much larger "turbulent viscosity". Models like k-ε and k-ω SST compute that turbulent viscosity from two transported quantities (turbulent kinetic energy and its dissipation/frequency). RANS is cheap and standard for buildings. <strong>LES (Large Eddy Simulation)</strong> resolves the large, energy-carrying eddies directly and models only the small ones — more accurate for unsteady, separated, or buoyant plumes, but far more expensive.</p>
+
+  <div class="eq"><b>τ<sub>ij</sub> = −ρ u′<sub>i</sub>u′<sub>j</sub> = μ<sub>t</sub>(∂U<sub>i</sub>/∂x<sub>j</sub> + ∂U<sub>j</sub>/∂x<sub>i</sub>) − ⅔ ρk δ<sub>ij</sub></b><span class="lbl">Versteeg &amp; Malalasekera, Eq. (3.33) — Boussinesq hypothesis: Reynolds stresses modelled via the turbulent (eddy) viscosity μ<sub>t</sub>. Here k is turbulent kinetic energy per unit mass and δ<sub>ij</sub> is the Kronecker delta.</span></div>
+  <p>This is the closure that makes RANS tractable: instead of resolving every fluctuating stress, the turbulent mixing is bundled into a single quantity, the eddy viscosity μ<sub>t</sub>, which models such as k-ε and k-ω SST then compute. <strong>Why this closure is used rather than resolving turbulence directly:</strong> directly simulating all turbulent scales (DNS) is computationally impossible at building scale, so a RANS closure is the practical choice — and the Boussinesq hypothesis (Eq. 3.33) is its foundation. It matters for THADES because μ<sub>t</sub> is largest exactly in the shear layers around the TST fan jet and the cavity plume; the predicted flow in those regions — and therefore the predicted short-circuit — depends on the turbulence model chosen, making this closure a decision the research must justify, not a formality.</p>
+  <div class="verify">
+    <span class="h">Check from source</span>
+    The Boussinesq relation above is now the exact form from Versteeg (Eq. 3.33). What still must be taken from the book are the transport equations that compute μ<sub>t</sub> itself — the k-ε and k-ω SST model equations — which are developed in the turbulence chapters and are not reproduced here.
+  </div>
+  <div class="book">
+    <span class="h">Book source</span>
+    Pope, <em>Turbulent Flows</em>, §"The closure problem" — the exact statement that the Reynolds equations contain more unknowns than equations, making a model mathematically necessary. Versteeg &amp; Malalasekera, Eq. (3.33) and the turbulence-modelling chapters — the Boussinesq closure and the k-ε / k-ω SST transport equations that compute μ<sub>t</sub>.
+  </div>
+  <div class="paper">
+    <span class="h">Applied in — concretely</span>
+    Singh et al. drive a reduced-scale room with a pair of exhaust fans and compare several RANS closures against PIV velocity measurements, reporting that agreement degrades specifically in the high-shear region near the fan suction — the empirical counterpart to why μ<sub>t</sub> (and thus model choice) dominates there. This is the published precedent for how the TST exhaust fan's turbulence treatment should be selected and checked.
+  </div>
+  <div class="thades">
+    <span class="h">Link to THADES</span>
+    The TST fan (suction jet) and cavity (buoyant plume) are exactly the regions where turbulence-model choice changes the answer. Selecting and justifying a model is a decision to be defended in RQ1.
+  </div>
+
+  <!-- MODULE 5 -->
+  <h2><span class="num">5</span> Boundary Conditions</h2>
+  <p class="goal">How real devices — DOAS, fans, buoyancy — enter a CFD domain.</p>
+
+  <p>The central idea established earlier: <strong>CFD does not model a "DOAS" or a "fan" as an object — it models their effect as a condition on the boundary of the domain.</strong> The device becomes a specification of what the air does where it enters or leaves. Buoyancy, by contrast, is not a boundary at all: it acts throughout the domain, and enters through the momentum source term.</p>
+
+  <h3>5.1 · How each THADES component is represented</h3>
+  <table>
+    <thead><tr><th>THADES component</th><th>Boundary condition</th><th>What is specified</th></tr></thead>
+    <tbody>
+      <tr><td>DOAS supply</td><td>velocity / mass-flow inlet</td><td>flow rate, supply temperature, humidity</td></tr>
+      <tr><td>TST exhaust fan</td><td>pressure or velocity outlet (suction)</td><td>extract rate, or negative pressure</td></tr>
+      <tr><td>Room surfaces</td><td>wall (no-slip + thermal)</td><td>surface temperature or heat flux</td></tr>
+      <tr><td>Passive buoyancy</td><td><em>not a boundary</em> — a momentum source term throughout the domain</td><td>gravity, density–temperature relation</td></tr>
+    </tbody>
+  </table>
+
+  <h3>5.2 · How buoyancy actually enters the equations</h3>
+  <p>Module 1 established that Versteeg does not write gravity into the momentum equation directly; it is carried in the source term S<sub>M</sub>. The book states the form explicitly:</p>
+  <div class="eq"><b>S<sub>Mx</sub> = 0 &nbsp;·&nbsp; S<sub>My</sub> = 0 &nbsp;·&nbsp; S<sub>Mz</sub> = −ρg</b><span class="lbl">Versteeg &amp; Malalasekera, §2.1.3 — "the body force due to gravity would be modelled by S<sub>Mx</sub> = 0, S<sub>My</sub> = 0 and S<sub>Mz</sub> = −ρg". Gravity acts only in the vertical (z) direction; ρ is density and g gravitational acceleration.</span></div>
+  <p>This is the exact mechanism by which buoyancy drives flow. Where the air is warm, ρ is lower, so the downward force −ρg is weaker than in the surrounding cooler air — the net imbalance pushes the warm air upward. <strong>Why this term is the physical heart of the research:</strong> the entire THADES stack effect, and the aerodynamic short-circuit it produces, originates in this single source term. If ρ were uniform, S<sub>Mz</sub> would be uniform, no buoyant imbalance would exist, and there would be no stack flow and no short-circuit. The doctoral work therefore stands or falls on whether the CFD model represents this density–gravity coupling correctly.</p>
+
+  <h3>5.3 · The Boussinesq approximation for buoyancy</h3>
+  <p>The source term above requires that density vary with temperature. Letting ρ vary <em>everywhere</em> in every equation is expensive and can destabilise the solver. The <strong>Boussinesq approximation</strong> is the standard compromise used in indoor CFD: density is treated as constant in all terms <em>except</em> the gravity/buoyancy term, where it is allowed to vary linearly with temperature through the thermal expansion coefficient β:</p>
+  <div class="eq"><b>ρ(T) = ρ̄ − ρ̄ β (T − T̄)</b><span class="lbl">Bird, Stewart, Lightfoot &amp; Klingenberg, <em>Introductory Transport Phenomena</em>, Eq. (11.3-1) — named there explicitly as the Boussinesq approximation. β ≡ −(1/ρ)(∂ρ/∂T)<sub>p</sub> evaluated at T̄, the volumetric thermal expansion coefficient (1/K); ρ̄ and T̄ are reference values. The book derives it as a Taylor expansion of ρ(T) at constant pressure, truncated after the first two terms. Equivalent to the commonly written form ρ ≈ ρ<sub>0</sub>[1 − β(T − T<sub>0</sub>)]. The same β appears in the Grashof number, Gr = gβΔT l³/ν² (Yang, Paper 2, Eq. 4).</span></div>
+  <p>The crucial detail is <em>where</em> this relation is substituted. Bird states it precisely: Eq. (11.3-1) is inserted into the ρ<em>g</em> (gravity) term of the momentum equation, <strong>but not into the ρ(D<em>v</em>/Dt) inertia term</strong>. Density is therefore constant everywhere except in the buoyancy force. Making that substitution yields what the book calls the Boussinesq equation of motion:</p>
+  <div class="eq"><b>ρ̄ (D<em>v</em>/Dt) = (−∇p + ρ̄<em>g</em>) − [∇ · τ] − ρ̄ <em>g</em> β (T − T̄)</b><span class="lbl">Bird et al., Eq. (11.3-2) — the momentum equation with buoyancy substituted in. The final term −ρ̄<em>g</em>β(T − T̄) is the buoyancy force; τ is the viscous stress tensor. This is the same physics as Versteeg's S<sub>Mz</sub> = −ρg source term, written with the density–temperature relation already inserted.</span></div>
+  <p><strong>Why this equation, and not a simpler one, matches the research:</strong> Bird notes that Eq. (11.3-2) covers forced convection, free convection, <em>and the region between the two extremes</em>. In pure forced convection the buoyancy term is neglected; in pure free convection the (−∇p + ρ̄<em>g</em>) term is dropped. THADES occupies neither extreme — passive buoyancy and active fan/DOAS operate together — so the full equation, with both terms retained, is the one that describes the system. This is the momentum-equation counterpart of the Richardson-number regime selection in Module 2 and the mixed-convection Nusselt blend in Module 3: three expressions of the same physical fact.</p>
+  <p><strong>Why the validity limit matters here:</strong> Bird qualifies the approximation as successful "for free convection at moderate temperature differences," where the acceleration term D<em>v</em>/Dt is small compared with <em>g</em>. Indoor air in a tropical office generally satisfies this. But the limit is not academic for THADES: the DSF cavity can reach substantially higher temperatures than the occupied zone under Jakarta solar loading. If the cavity–room temperature difference grows large, the linear truncation weakens. Gray and Giorgini (1976) provide the quantitative criterion — property variations should not exceed roughly 10% for the full approximation to hold. Establishing that the modelled temperature range stays within that bound, or moving to a variable-density formulation if it does not, is a modelling decision the research must make and justify rather than inherit from a solver default.</p>
+
+  <h3>5.4 · Why passive and active must coexist in one domain</h3>
+  <p>The two mechanisms are of different kinds: the DOAS and TST fan are <em>boundary</em> conditions imposed at the edges of the domain, while buoyancy is a <em>volumetric source</em> acting inside it — the −ρ̄<em>g</em>β(T − T̄) term of Eq. (11.3-2), present in every cell where the air is warmer or cooler than the reference. They are solved simultaneously, and their interaction is what the research must resolve: whether the fan's suction reinforces the buoyant path (and so accelerates the short-circuit) or redirects it through the occupied zone.</p>
+  <p>Neither can be studied in isolation. Dropping the buoyancy term — the forced-convection simplification Bird describes — would delete the very phenomenon under investigation. Dropping the pressure/mechanical terms — the free-convection simplification — would delete the intervention being tested. The THADES model must therefore retain the full form, which is precisely why the system sits in the mixed regime rather than at either limit.</p>
+
+  <div class="book">
+    <span class="h">Book source</span>
+    Bird, Stewart, Lightfoot &amp; Klingenberg, <em>Introductory Transport Phenomena</em>, §11.3 "The Boussinesq Equation of Motion for Forced and Free Convection" — Eq. (11.3-1), the density–temperature relation; Eq. (11.3-2), the momentum equation with buoyancy substituted in, and the statement that it spans forced, free, and mixed convection. Versteeg &amp; Malalasekera, §2.1.3 — the same buoyancy physics expressed as a momentum source term (S<sub>Mz</sub> = −ρg), plus the boundary-condition treatment (inlets, outlets, walls, pressure boundaries) in the finite-volume chapters. Yang (Paper 2) — β and its role in the Grashof number. Gray &amp; Giorgini (1976), <em>Int. J. Heat Mass Transfer</em> — the quantitative validity limit of the approximation.
+  </div>
+  <div class="verify">
+    <span class="h">Check from source</span>
+    The Boussinesq relation and the Boussinesq equation of motion are now sourced (Bird et al., Eqs. 11.3-1 and 11.3-2). Two items still require checking against the specific study: (1) the solver's own implementation of buoyancy — whether it applies the Boussinesq switch or a full variable-density formulation, and what temperature-difference limit it assumes internally; (2) whether the modelled DSF cavity temperatures stay inside the validity bound (Gray &amp; Giorgini's ~10% property-variation criterion), which must be tested against the simulated temperature range rather than assumed.
+  </div>
+  <div class="paper">
+    <span class="h">Applied in — concretely</span>
+    Micheal et al. (2022) generate the CFD supply and extract boundary conditions <em>from BES results</em> for a DOAS-UFAD system, placing supply and extract grilles as inlet/outlet conditions in the occupied zone — the closest published analogue to representing the THADES DOAS and TST exhaust fan, and the precedent for driving CFD boundary values from an energy model rather than assuming them. Li et al. (2024) switch boundary conditions between passive (window open, HVAC off) and active (window closed, HVAC on) modes across scenarios, demonstrating how a coupled model handles a system that alternates between passive and mechanical operation. Singh et al. impose a pair of exhaust fans as outlet conditions and validate the resulting flow against PIV, showing both how a fan is specified and where the prediction is least reliable near the suction.
+  </div>
+  <div class="thades">
+    <span class="h">Link to THADES</span>
+    This module answers the earlier question — yes, CFD can simulate the DOAS and the exhaust fan, as boundary conditions, while buoyancy enters as a momentum source. The open part, and the RQ3 contribution, is how the passive source and the active boundaries interact in one domain: whether mechanical extraction breaks the aerodynamic short-circuit or entrenches it.
+  </div>
+  <div class="thades">
+    <span class="h">Link to THADES</span>
+    This module answers the earlier question — yes, CFD can simulate the DOAS and the exhaust fan, as boundary conditions. The open part, and the RQ3 contribution, is how the passive (buoyancy) and active (fan/DOAS) boundary conditions interact in one domain.
+  </div>
+
+  <!-- MODULE 6 -->
+  <h2><span class="num">6</span> Mesh, Discretisation &amp; Validation</h2>
+  <p class="goal">Making a CFD result trustworthy.</p>
+
+  <p>CFD turns the continuous equations of Module 1 into algebra by dividing the domain into a <strong>mesh</strong> of finite cells and approximating the equations on each — the <em>finite-volume method</em>. Two separate disciplines make the output credible, and they are routinely confused:</p>
+  <p><strong>Verification</strong> asks "am I solving the equations right?" — a purely numerical question about whether the discretisation has converged. <strong>Validation</strong> asks "am I solving the right equations?" — a physical question about whether the model corresponds to reality. A perfectly grid-converged result can still be physically wrong if the turbulence model or the boundary conditions are wrong. The two must be established separately.</p>
+
+  <h3>6.1 · Verification: quantifying discretisation uncertainty</h3>
+  <p>The common practice is to refine the mesh until the answer "stops changing" and declare grid-independence. Roache's objection is that this is a subjective judgement: the observed difference between two grids, ε, depends on how much the grid was refined (the refinement ratio r) and on the order of the numerical method (p). A 5% difference from a barely-refined grid and a 5% difference from a doubled grid do not carry the same meaning at all. Reporting ε alone is therefore not an error estimate.</p>
+  <p>The <strong>Grid Convergence Index</strong> puts all such studies onto a common basis by converting any (r, p) result into the equivalent uncertainty that a grid-doubling with a second-order method would have produced:</p>
+  <div class="eq"><b>GCI<sub>fine grid</sub> = F<sub>s</sub> · |ε| / (r<sup>p</sup> − 1)</b><span class="lbl">Roache, <em>Verification and Validation in Computational Science and Engineering</em>, Eq. (5.6.1). ε is the relative difference between the two grid solutions (Eq. 5.4.3); r is the grid refinement ratio; p is the observed order of convergence; F<sub>s</sub> is a factor of safety. Roache's default is F<sub>s</sub> = 3; he discusses F<sub>s</sub> = 1.25 as a less conservative alternative when more grids support the estimate. With F<sub>s</sub> = 1, the GCI reduces to the Richardson error estimator E₁.</span></div>
+  <p><strong>Why this is computed rather than merely asserted:</strong> the GCI is a number the research will calculate and report, not a concept operating behind the solver. It converts grid-independence from a claim into a stated uncertainty band on the result — for instance, that a predicted flow rate carries a 6% discretisation uncertainty. Because the integrated THADES configuration has no built prototype to measure against, the credibility of the mechanism findings rests disproportionately on this kind of internal rigour: an examiner who cannot check the result against a physical measurement can still check whether the discretisation uncertainty was quantified and reported.</p>
+
+  <h3>6.2 · Near-wall resolution and its link to the CHTC</h3>
+  <p>Mesh quality is not uniform in importance across the domain. The convective heat transfer coefficient of Module 3 is governed by the thin boundary layer at each surface, where velocity and temperature gradients are steepest. Resolving that layer requires either a very fine near-wall mesh or a <em>wall function</em> that models it. This is not a general refinement issue but a targeted one: an under-resolved boundary layer corrupts α directly, and through α, every energy figure the research reports. The mesh strategy and the CHTC method are therefore a single coupled decision, not two independent ones.</p>
+
+  <h3>6.3 · Validation without a prototype</h3>
+  <p>Validation compares the model against measurement. The difficulty for this research is structural: the integrated THADES system — DSF, TST, external louver, DOAS and mechanical exhaust operating together — has never been built, so no measurement of the whole system exists. The response is a tiered strategy: validate the <em>components</em> and the <em>physics</em> against cases that have been measured, then assemble. Buoyancy-driven cavity flow, stack-driven extraction, and mechanically-driven room ventilation each have published, measured precedents; the integrated configuration is then a composition of validated parts rather than an unvalidated whole. This is a defensible position, but it must be argued explicitly rather than assumed.</p>
+  <p>The literature supplies both the template for this approach and the component benchmarks it requires. The dominant pattern across these studies is consistent: a measurable case — most often a scaled physical model or an experimental chamber — is used to validate the CFD setup (turbulence model, wall treatment, boundary conditions), and only then is that validated setup applied to the configuration of real interest. Several recent studies establish this pattern for precisely the components THADES combines.</p>
+
+  <table>
+    <thead><tr><th>Precedent</th><th>Validation method used</th><th>What it supports for THADES</th></tr></thead>
+    <tbody>
+      <tr><td>Shi et al. 2023 <span style="font-weight:400;color:var(--muted)">(Sustainable Cities &amp; Society)</span></td><td>Scaled physical model generates data; CFD validated against it; validated CFD then used to vary heat-source strength across storeys</td><td>Closest procedural template — a multi-storey <em>vertical shaft</em> (analogous to the TST), validated then extrapolated</td></tr>
+      <tr><td>Chen et al. 2024 <span style="font-weight:400;color:var(--muted)">(Energy &amp; Buildings)</span></td><td>Experimental chamber with strong thermal buoyancy; buoyancy turbulence model with a new wall function validated against measurements</td><td>Mechanical extraction competing with strong buoyancy — the TST exhaust-fan regime; also a near-wall treatment precedent for CHTC</td></tr>
+      <tr><td>Zhao et al. 2025 <span style="font-weight:400;color:var(--muted)">(Applied Energy)</span></td><td>Experimental + theoretical; CFD validated, mean relative error 13.1% on volume flow rate reported</td><td>DSF with inclined louvers — the closest published match to the DSF+louver sub-system; a realistic error benchmark</td></tr>
+      <tr><td>Zhao et al. 2025 <span style="font-weight:400;color:var(--muted)">(Renewable Energy)</span></td><td>Experimental platform; CFD model developed and validated under varying solar radiation</td><td>Solar-driven DSF ventilation with louver control — cavity physics under solar load, as in Jakarta</td></tr>
+      <tr><td>Pappas &amp; Zhai 2008 <span style="font-weight:400;color:var(--muted)">(Energy &amp; Buildings)</span></td><td>BES–CFD coupling on a buoyancy-driven DSF cavity</td><td>Component benchmark for the DSF cavity buoyancy, and a coupling precedent</td></tr>
+      <tr><td>Chen &amp; Gorlé 2022 <span style="font-weight:400;color:var(--muted)">(Building &amp; Environment)</span></td><td>Transient CFD validated against full-scale field measurements, with uncertainty quantification</td><td>Multi-storey buoyant/stack flow — the TST stack effect; a template for reporting input uncertainty</td></tr>
+      <tr><td>Singh et al. <span style="font-weight:400;color:var(--muted)">(reduced-scale study)</span></td><td>RANS validated against PIV velocity measurements for fan-driven flow</td><td>Component benchmark for the exhaust fan, and evidence of where RANS is least reliable near suction</td></tr>
+      <tr><td>Nguyen et al. 2024 <span style="font-weight:400;color:var(--muted)">(Building &amp; Environment)</span></td><td>Overset-grid CFD validated against two field experiments from the literature, then applied to an unbuilt precinct</td><td>Direct precedent for the whole situation — validate on measured analogues, then apply to an unbuilt configuration</td></tr>
+    </tbody>
+  </table>
+
+  <p>Two further sources frame the strategy rather than supply a benchmark. The DSF-CFD review of Kada et al. (2023, <em>Building Simulation</em>) reports that the field lacks agreed benchmarking datasets and that there is no consensus on what constitutes a successfully validated DSF CFD model — which both justifies the component-wise approach adopted here and identifies a genuine methodological gap the research can address. Dong et al. (2024, <em>Renewable &amp; Sustainable Energy Reviews</em>) catalogues the failure modes of naturally ventilated DSFs, providing independent support for treating the aerodynamic short-circuit as a recognised risk rather than an anomaly.</p>
+  <p><strong>The limit that must be stated.</strong> Component validation establishes that each physical mechanism is captured, but it does not by itself prove that the <em>interaction</em> between passive buoyancy and active extraction is captured — and that interaction is the object of the research. This is a structural limitation of studying an unbuilt integrated system, not an oversight. It is mitigated, not removed, by selecting benchmarks that themselves combine mechanisms (Shi's shaft under varying heat source; Chen's extraction against buoyancy), and it should be declared as a limitation and, where possible, probed by cross-checking against the master's EnergyPlus-AFN results.</p>
+
+  <div class="book">
+    <span class="h">Book source</span>
+    Roache, <em>Verification and Validation in Computational Science and Engineering</em>, Ch. 5 — systematic grid convergence studies; §5.5 Richardson's extrapolation; §5.6 the Grid Convergence Index, Eq. (5.6.1), with the factor of safety F<sub>s</sub> and its interpretation. Versteeg &amp; Malalasekera — finite-volume discretisation, solution algorithms, and near-wall treatment.
+  </div>
+  <div class="verify">
+    <span class="h">Check from source</span>
+    Two items: (1) the exact form of Eq. (5.6.1) and the definition of ε (Eq. 5.4.3) should be confirmed against Roache before the index is reproduced in the thesis; (2) the value of F<sub>s</sub> to adopt — Roache's conservative default of 3, versus 1.25 for studies supported by more grids — is a reporting decision to be justified, not a default to inherit.
+  </div>
+  <div class="paper">
+    <span class="h">Applied in — concretely</span>
+    Chen &amp; Gorlé (2022) is the closest methodological template: transient CFD of buoyancy-driven natural ventilation in an operational atrium, validated against full-scale field measurements <em>with uncertainty quantification</em>, reporting agreement in volume-averaged floor air temperatures and attributing residual discrepancy to uncertainty in the boundary conditions and in the measurements themselves. Note the distinction: their emphasis is on <em>input</em> uncertainty (boundary conditions), which is complementary to — not a substitute for — the <em>discretisation</em> uncertainty the GCI quantifies. A rigorous study addresses both. Nguyen (2024) validates an overset-grid CFD approach against measurements drawn from the literature before applying it to an unbuilt urban precinct — a direct precedent for the situation faced here, where the configuration of interest has no measurements of its own and validation must be borrowed from measured analogues.
+  </div>
+  <div class="thades">
+    <span class="h">Link to THADES</span>
+    RQ1's credibility rests on this module. Because the integrated system has no built prototype, validation will be component-level (DSF cavity buoyancy, TST stack extraction, mechanically-ventilated zone) against published measured benchmarks, cross-checked against the master's EnergyPlus-AFN results, with discretisation uncertainty reported via the GCI. The strategy must be designed and defended explicitly — it is the part of the methodology most exposed to examination.
+  </div>
+
+  <!-- MODULE 7 -->
+  <h2><span class="num">7</span> Coupling &amp; Reduced-Order Methods</h2>
+  <p class="goal">BES–CFD coupling, surrogate models, and sensitivity analysis.</p>
+
+  <h3>BES–CFD coupling</h3>
+  <p>BES (EnergyPlus/DesignBuilder) is fast and good at annual energy and control logic, but treats a room as one well-mixed node — it cannot see local airflow. CFD sees the airflow in detail but is too slow for a year. <strong>Coupling</strong> lets each supply what the other lacks: BES passes surface temperatures to CFD; CFD passes back near-wall velocity (or a CHTC), which BES uses to correct its heat balance. This is the method behind RQ3.</p>
+
+  <h3>Surrogate models</h3>
+  <p>Because CFD is too slow to run the thousands of times that optimisation and sensitivity need, a <strong>surrogate</strong> is trained: a machine-learning model that learns the input→output relation from a limited set of CFD runs, then predicts new cases almost instantly. It is a <em>calculating machine</em>, not a lookup table — it computes predictions for combinations never simulated. Common types, in rising data appetite: <strong>polynomial</strong> models, <strong>radial basis functions (RBF)</strong>, and <strong>Kriging (Gaussian process)</strong>.</p>
+  <p>Forrester gives the concrete reason Kriging is usually preferred when CFD samples are scarce. Its basis function is:</p>
+  <div class="eq"><b>ψ<sup>(i)</sup> = exp( − Σ<sub>j=1..k</sub> θ<sub>j</sub> | x<sub>j</sub><sup>(i)</sup> − x<sub>j</sub> |<sup>p<sub>j</sub></sup> )</b><span class="lbl">Forrester, Sóbester &amp; Keane, <em>Engineering Design via Surrogate Modelling</em>, §2.4, Eq. (2.19) — the Kriging basis function. θ<sub>j</sub> is the per-variable width and p<sub>j</sub> the per-variable exponent; k is the number of design variables.</span></div>
+  <p>Forrester frames this by direct contrast with the Gaussian radial basis function of the preceding section. Where a Gaussian basis uses a single width (1/σ²) applied to every variable, the Kriging basis carries a vector θ = (θ₁, θ₂, …, θ<sub>k</sub>), allowing the width to differ from one variable to the next. And where the Gaussian exponent is fixed at 2, the Kriging exponent is itself a vector p = (p₁, …, p<sub>k</sub>), typically with p<sub>j</sub> ∈ [1, 2], free to vary per dimension. When the exponent is fixed at 2 and θ is held constant across all dimensions, the Kriging basis reduces exactly to the Gaussian — so the Gaussian is a special case, and the two extra vectors are what give Kriging its added flexibility. <strong>Why this matters for the research:</strong> the THADES design variables are not equally influential — cavity depth, tower geometry, and louver gap act on very different scales — and the per-variable width θ lets the surrogate stretch or compress each dimension to match its true influence, which a single-width basis cannot. This is the concrete basis for preferring Kriging over a plain radial basis function or a polynomial when CFD samples are expensive and few.</p>
+  <div class="verify">
+    <span class="h">Check from source / decide by experiment</span>
+    The choice of surrogate (Kriging, radial basis function, or another form) and the minimum number of CFD samples required are project-specific — to be determined from Forrester's guidance and from accuracy tests (RMSE against held-out cases), not assumed in advance.
+  </div>
+
+  <h3>Sobol sensitivity analysis</h3>
+  <p>Once the surrogate is trained and its accuracy verified (RMSE against held-out CFD cases), <strong>Sobol analysis</strong> quantifies how much of the output's variance each variable — and each interaction — is responsible for. It runs by generating many input combinations (Saltelli sampling) and calling the surrogate for each. It produces two indices per variable:</p>
+  <div class="eq"><b>S<sub>i</sub> = V<sub>Xi</sub>[ E<sub>X∼i</sub>(Y | X<sub>i</sub>) ] / V(Y)</b><span class="lbl">Saltelli et al., Eq. (1.25) — first-order sensitivity index: the share of output variance V(Y) explained by variable X<sub>i</sub> acting alone. Always between 0 and 1. The total-effect index S<sub>Ti</sub> (Saltelli §1.2.12, "Total Effects") adds all interactions involving X<sub>i</sub>.</span></div>
+  <p>The numerator measures how much the output's expected value moves as X<sub>i</sub> is varied; dividing by the total variance V(Y) expresses it as a proportion. <strong>Why this index, and not a simpler measure, is required:</strong> the doctoral optimisation involves many geometric variables that may interact, and a one-at-a-time sensitivity test cannot detect interactions. The Sobol decomposition can, which is why it is chosen. Two consequences follow directly for THADES. First, the keep-or-fix decision for a variable rests on its total index S<sub>Ti</sub> (a variable is fixed only if S<sub>Ti</sub> ≈ 0), so that a variable which matters only through interaction is not discarded. Second — and this is a caveat, not a convenience — the standard index assumes independent inputs, whereas the master's glazing SHGC and U-value were confounded; Saltelli's treatment of non-independent factors is therefore directly relevant, and the analysis must account for it rather than ignore it.</p>
+  <p>A crucial caveat: Sobol assumes independent inputs. The master's glazing SHGC and U-value were <strong>confounded</strong> (locked as Type 1/Type 2), so standard Sobol cannot separate them — the "non-independent input factors" section of Saltelli addresses exactly this.</p>
+  <div class="book">
+    <span class="h">Book source</span>
+    Forrester, Sóbester &amp; Keane — Ch. 1 (sampling-plan design, screening) and Ch. 2 (surrogate types: polynomial, RBF, Kriging). Saltelli et al., <em>Global Sensitivity Analysis: The Primer</em> — Ch. 1 (models, methods, non-independent factors, pitfalls) and the later Total-Effects sections (Sobol variance decomposition, Saltelli sampling).
+  </div>
+  <div class="paper">
+    <span class="h">Applied in — concretely</span>
+    Nouri (2024) is the direct template: a MARS meta-model is trained on building-energy simulations, its accuracy checked, and Sobol' indices then computed on the cheap surrogate — the exact train → verify → Sobol sequence, with the non-independence caveat handled explicitly. Zhang (2023) obtains Sobol indices from a spline surrogate coupled to EnergyPlus without Monte-Carlo integration, showing an alternative route to the same indices. Morozova (2022) demonstrates a numbers-in/numbers-out CFD flow-surrogate; Vandewiel (2025) an image-based deep surrogate of CFD fields; Niu (2024) the Python workflow chaining CFD to post-processing. Together they evidence each stage of the pipeline the research will assemble.
+  </div>
+  <div class="thades">
+    <span class="h">Link to THADES</span>
+    This module is the operational spine of RQ2 and RQ3: it is how the mechanism (RQ1) becomes an optimised, validated, energy-evaluated framework. The full pipeline: CFD+BES → surrogate → verify (RMSE) → Sobol → multi-objective optimisation → verify best candidate with full CFD → integrate active supplementation → evaluate energy.
+  </div>
+
+  <!-- REFERENCES -->
+  <h2><span class="num">R</span> References</h2>
+  <p class="refhead">Textbooks</p>
+  <ol class="refs">
+    <li>Versteeg, H.K. &amp; Malalasekera, W. <em>An Introduction to Computational Fluid Dynamics: The Finite Volume Method</em>, 2nd ed. Pearson. — continuity Eq. (2.5); substantive derivative Eq. (2.7); Navier–Stokes Eq. (2.34a); energy Eq. (2.25); gravity source term §2.1.3; Boussinesq eddy-viscosity Eq. (3.33).</li>
+    <li>White, F.M. <em>Fluid Mechanics</em>, 7th ed. McGraw-Hill. — the continuum assumption and the limit definition of density, §1.5, Eq. (1.1).</li>
+    <li>Bird, R.B., Stewart, W.E., Lightfoot, E.N. &amp; Klingenberg, D.J. <em>Introductory Transport Phenomena.</em> Wiley, 2014. — the Boussinesq approximation §11.3: density–temperature relation Eq. (11.3-1); Boussinesq equation of motion Eq. (11.3-2).</li>
+    <li>Incropera, F.P. &amp; DeWitt, D.P. <em>Fundamentals of Heat and Mass Transfer.</em> Wiley. — dimensionless groups; the identification of Gr/Re² as the Richardson number; convection correlations.</li>
+    <li>Pope, S.B. <em>Turbulent Flows.</em> Cambridge University Press. — the closure problem: the Reynolds equations contain more unknowns than equations.</li>
+    <li>Roache, P.J. <em>Verification and Validation in Computational Science and Engineering.</em> Hermosa. — Ch. 5, systematic grid convergence; §5.5 Richardson extrapolation; §5.6 Grid Convergence Index, Eq. (5.6.1).</li>
+    <li>Forrester, A.I.J., Sóbester, A. &amp; Keane, A.J. <em>Engineering Design via Surrogate Modelling: A Practical Guide.</em> Wiley. — sampling plans (Ch. 1); Kriging basis function Eq. (2.19).</li>
+    <li>Saltelli, A., Ratto, M., Andres, T., Campolongo, F., Cariboni, J., et al. <em>Global Sensitivity Analysis: The Primer.</em> Wiley. — first-order index Eq. (1.25); total effects §1.2.12; non-independent input factors.</li>
+  </ol>
+
+  <p class="refhead">Additional source cited</p>
+  <ol class="refs" start="9">
+    <li>Gray, D.D. &amp; Giorgini, A. (1976). The validity of the Boussinesq approximation for liquids and gases. <em>International Journal of Heat and Mass Transfer</em>, 19(5), 545–551. — the quantitative validity limit of the Boussinesq approximation (property variations within ~10%). Cited via Bird et al.; consult directly before relying on the criterion.</li>
+  </ol>
+  <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:11.5px;color:var(--muted);">Edition, publisher, and page details are to be confirmed for formal citation, and each equation should be checked against its original source before being reproduced in the thesis. Two relations are drawn from outside the primary textbook set and are attributed accordingly in the text: the Richardson-number regime thresholds (Yang et al.) and the validity criterion for the Boussinesq approximation (Gray &amp; Giorgini, via Bird et al.).</p>
+
+  <p class="refhead">Supporting journal papers</p>
+  <ol class="refs">
+    <li>Yang, X., Ozaki, A., Arima, Y., Choi, Y., Yoo, S.-J. (2024). Numerical modeling of biophilic design incorporating large-scale waterfall into a public building. <em>Building and Environment, 266.</em></li>
+    <li>Yang, X., Yoon, S., Yoo, S.-J., Arima, Y., Choi, Y., Jing, W., Ozaki, A. (2026). Optimization of the boundary condition treatment for coupled BES–CFD simulation. <em>Building and Environment, 287.</em></li>
+    <li>Pappas, A., Zhai, Z. (2008). Numerical investigation on thermal performance of a buoyancy-driven double-skin façade. <em>Energy and Buildings, 40, 466–475.</em></li>
+    <li>Chen, C., Gorlé, C. (2022). Full-scale validation of CFD simulations of buoyancy-driven ventilation in a three-story office building. <em>Building and Environment, 221.</em></li>
+    <li>Singh, D.N., Biswal, L., Naik, G., Bose, M., Sinha, K. Assessment of RANS simulation for hybrid ventilation in a reduced-scale classroom model. (IIT Bombay.)</li>
+    <li>Micheal, A., et al. (2022). Multi-objective integrated BES–CFD co-simulation approach towards pandemic-proof buildings. <em>Energy Reports, 8, 137–152.</em></li>
+    <li>Li, Yu, Li, Lingling, Cui, X., Peng, [et al.] (2024). Coupled building simulation and CFD for real-time window and HVAC control in sports space. <em>Journal of Building Engineering, 97.</em></li>
+    <li>Nguyen, et al. (2024). Analysis and assessment of natural ventilation in the design of urban precincts using an overset grid CFD approach. <em>Building and Environment, 269.</em></li>
+    <li>Niu, et al. (2024). A quick simulation workflow to optimizing natural ventilation for building and landscape design. <em>Energy and Buildings, 324.</em></li>
+    <li>Nouri, A., van Treeck, C., Frisch, J. (2024). Sensitivity Assessment of Building Energy Performance Simulations Using MARS Meta-Modeling in Combination with Sobol' Method. <em>Energies, 17(3), 695.</em></li>
+    <li>Zhang, H., Tian, W., Sambatmaryde, K., Tan, J., Chen, B. (2023). Machine Learning-Based Sobol Sensitivity Analysis for Building Energy Assessment without Monte Carlo Integral. (IBPSA Building Simulation conference paper — confirm status.)</li>
+    <li>Morozova, N., Trias, F.X., Capdevila, R., Schillaci, E., Oliva, A. (2022). A CFD-based surrogate model for predicting flow parameters in a ventilated room using sensor readings. <em>Energy and Buildings, 266.</em></li>
+    <li>Vandewiel, J., Eneyew, D., Awol, F., Capretz, M., Bitsuamlak, G. (2025). Approximating CFD simulations of natural ventilation: A deep surrogate model with spatial attention mechanism. <em>Journal of Building Engineering, 105.</em></li>
+    <li>A multi-zone-model + CFD integration study for natural-ventilation design (full citation to be identified from the source file).</li>
+  </ol>
+
+  <p class="refhead">Validation precedents (Module 6.3)</p>
+  <ol class="refs" start="15">
+    <li>Shi, X., Li, Y., Long, T., Zhao, N., Liu, S., Li, T. (2023). Buoyancy-driven natural ventilation performance of a multi-story building with vertical shaft designed by using dimensionless design approach. <em>Sustainable Cities and Society, 99, 104997.</em></li>
+    <li>Chen, B., Liu, S., Liu, J., Jiang, N., Chen, Q. (2024). An energy-efficient exhaust hood for industrial buildings with strong thermal buoyancy. <em>Energy and Buildings, 308, 114036.</em></li>
+    <li>Zhao, X., Song, Y., Huang, L., Song, Z., Dong, Q., Qi, J., Shi, L. (2025). Controlling double-skin façades with inclined louvers for natural ventilation: An experimental and theoretical study. <em>Applied Energy, 377, 124560.</em></li>
+    <li>Zhao, X., Song, Y., Dong, Q., Huang, L., Wang, Y., Shi, L. (2025). Solar radiation-controllable double-skin façades to enhance natural ventilation for green buildings. <em>Renewable Energy, 255, 123805.</em></li>
+    <li>Dong, Q., Zhao, X., Song, Y., Qi, J., Shi, L. (2024). Determining the potential risks of naturally ventilated double skin façades. <em>Renewable and Sustainable Energy Reviews, 191, 114064.</em></li>
+    <li>Kada, [et al.] (2023). Double-skin façade simulation with computational fluid dynamics: A review of simulation trends, validation methods and research gaps. <em>Building Simulation, 16, 2307–2331.</em> (Confirm the full author list from the source.)</li>
+  </ol>
+  <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:11.5px;color:var(--muted);">Author lists are shown as they appear in the manuscripts; complete lists, years, volume, and page details should be confirmed from the official records. The six validation precedents were identified from the source papers' opening pages and validation sections; their reported methods are summarised in the §6.3 table and should be read in full before citing. Every equation reproduced in this document should be checked against its original source before use in the proposal or thesis.</p>
+
+</main>
+</body>
+</html>
