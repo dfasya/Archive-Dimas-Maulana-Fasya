@@ -38,6 +38,12 @@ try:
 except ImportError:
     sys.exit("demo_terminal.py must be in the same folder as this script.")
 
+try:
+    from fan_control import FanController
+    HAS_FANS = True
+except ImportError:
+    HAS_FANS = False
+
 
 # ----------------------------------------------------------------------
 # Style
@@ -49,6 +55,8 @@ RAIN = "#2b7fb8"
 HEAT = "#c0492f"
 OPEN_C = "#d9a441"
 OKGREEN = "#3d8b7d"
+FAN1 = "#7bb5c4"
+FAN2 = "#2f6f8f"
 
 plt.rcParams.update({
     "figure.dpi": 130,
@@ -89,7 +97,7 @@ def attach_solar(df, args):
     return df
 
 
-def run_day(day_df, cols, args, hysteresis, min_dwell):
+def run_day(day_df, cols, args, hysteresis, min_dwell, with_fans=False):
     """Return per-minute state/reason arrays for one day."""
     ctrl = Controller(
         cols,
@@ -98,11 +106,23 @@ def run_day(day_df, cols, args, hysteresis, min_dwell):
         hysteresis=hysteresis,
         min_dwell=min_dwell,
     )
-    states, reasons = [], []
+    fans = FanController() if (with_fans and HAS_FANS) else None
+
+    states, reasons, stages = [], [], []
+
     for _, row in day_df.iterrows():
-        state, reason, _, _, _, _, _ = ctrl.step(row)
+        state, reason, _, _, rain_on, heat, _ = ctrl.step(row)
         states.append(1 if state == "OPEN" else 0)
         reasons.append(reason)
+
+        if fans is not None:
+            ts = row["Date/Time"].to_pydatetime()
+            stage, _ = fans.step(heat, state, ts, rain_on)
+            stages.append(stage)
+
+    if with_fans:
+        return (np.array(states), reasons,
+                np.array(stages) if stages else None)
     return np.array(states), reasons
 
 
@@ -115,11 +135,17 @@ def transitions(states):
 # ----------------------------------------------------------------------
 
 def fig_daily(day_df, cols, args, day, outdir):
-    states, reasons = run_day(day_df, cols, args, args.hysteresis, args.min_dwell)
+    states, reasons, stages = run_day(
+        day_df, cols, args, args.hysteresis, args.min_dwell, with_fans=True)
     t = day_df["Date/Time"].to_numpy()
 
-    fig, ax = plt.subplots(4, 1, figsize=(9.5, 7.2), sharex=True,
-                           gridspec_kw={"height_ratios": [2, 2, 2, 1.1]})
+    show_fans = stages is not None and len(stages) == len(t)
+    n_panels = 5 if show_fans else 4
+    ratios = [2, 2, 2, 1.1, 1.1] if show_fans else [2, 2, 2, 1.1]
+
+    fig, ax = plt.subplots(n_panels, 1,
+                           figsize=(9.5, 8.4 if show_fans else 7.2),
+                           sharex=True, gridspec_kw={"height_ratios": ratios})
 
     # -- rain shading on every panel
     rain_on = (day_df[cols["rain_flag"]] == 10).to_numpy() if cols["rain_flag"] else np.zeros(len(t), bool)
@@ -173,16 +199,33 @@ def fig_daily(day_df, cols, args, day, outdir):
     ax[3].legend(loc="upper right", fontsize=7.5, ncol=3)
     ax[3].grid(alpha=.5)
 
-    ax[3].xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
-    ax[3].xaxis.set_major_locator(mdates.HourLocator(interval=3))
-    ax[3].set_xlabel("Time of day")
+    if show_fans:
+        ax[4].step(t, stages, where="post", color=INK, lw=1.2)
+        ax[4].fill_between(t, 0, stages, where=(stages == 1), color=FAN1,
+                           alpha=.6, step="post", label="Comfort (low)")
+        ax[4].fill_between(t, 0, stages, where=(stages == 2), color=FAN2,
+                           alpha=.6, step="post", label="Heatwave (high)")
+        ax[4].set_yticks([0, 1, 2])
+        ax[4].set_yticklabels(["OFF", "LOW", "HIGH"])
+        ax[4].set_ylim(-.2, 2.3)
+        ax[4].set_ylabel("Fans")
+        ax[4].legend(loc="upper right", fontsize=7.5, ncol=2)
+        ax[4].grid(alpha=.5)
+
+    last = ax[-1]
+    last.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
+    last.xaxis.set_major_locator(mdates.HourLocator(interval=3))
+    last.set_xlabel("Time of day")
 
     n_open = int(states.sum())
-    fig.suptitle(
-        f"Canopy control decision sequence — {day}\n"
-        f"open {n_open} of {len(states)} min ({n_open/len(states)*100:.1f}%),  "
-        f"{transitions(states)} actuator cycles",
-        fontsize=10.5, fontweight="bold", y=.985)
+    title = (f"Canopy control decision sequence — {day}\n"
+             f"open {n_open} of {len(states)} min "
+             f"({n_open / len(states) * 100:.1f}%),  "
+             f"{transitions(states)} actuator cycles")
+    if show_fans:
+        title += f",  fans {int((stages > 0).sum())} min"
+
+    fig.suptitle(title, fontsize=10.5, fontweight="bold", y=.985)
 
     fig.tight_layout(rect=[0, 0, 1, .955])
     path = os.path.join(outdir, "fig1_daily_timeline.png")
